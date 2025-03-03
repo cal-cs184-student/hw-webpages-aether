@@ -77,7 +77,7 @@
 			Briefly explain de Casteljau's algorithm and how you implemented it in order to evaluate Bezier curves.
 		</blockquote>
 
-		De Casteljau's algorithm is a recursive method used to evaluate Bézier curves at a given parameter \(t\). It works by linearly interpolating between control points until only one point remains, which is the point on the curve at \(t\). Given our control points, we do the following:
+		De Casteljau's algorithm is a recursive method used to evaluate Bezier curves at a given parameter \(t\). It works by linearly interpolating between control points until only one point remains, which is the point on the curve at \(t\). Given our control points, we do the following:
 
 		<ol>
 			<li> For each pair of consecutive points, compute a new point using linear interpolation: \( P_{new} = (1 - t) \times P_i + t \times P_{i+1} \)</li>
@@ -85,7 +85,7 @@
 			<li> Continue recursively until only one point is left &mdash; this is the curve point at \(t\)</li>
 		</ol>
 
-		In code, given \( n \) control points, we used a while loop that repeatedly called <code>BezierPatch::evaluateStep</code> on our current list of control points until its length reached \( 1 \). Within the <code>BezierPatch::evaluateStep</code> function, given \( n \) points, we performed \( n - 1 \) interpolations by iterating through the list of points using a for loop.
+		In code, given \( n \) control points, we use a while loop that repeatedly calls <code>BezierPatch::evaluateStep</code> on our current list of control points until its length reaches \( 1 \). Within the <code>BezierPatch::evaluateStep</code> function, given \( n \) points, we perform \( n - 1 \) interpolations by iterating through the list of points using a for loop.
 
 		<blockquote>
 			Take a look at the provided <code>.bzc</code> files and create your own Bezier curve with 6 control points of your choosing. Use this Bezier curve for your screenshots below.
@@ -184,9 +184,23 @@
 			Briefly explain how de Casteljau algorithm extends to Bezier surfaces and how you implemented it in order to evaluate Bezier surfaces.
 		</blockquote>
 
+		De Casteljau's algorithm extends to Bezier surfaces by applying the same recursive interpolation used for Bezier curves, but in two parameters, \(u\) and \(v\).
+
+		<ol>
+			<li> For a Bezier surface defined by a grid of control points, apply 1D de Casteljau along each row of points with a fixed \(u\)</li>
+			<li> Once we have one interpolated point from each row, apply 1D de Casteljau on these points along \(v\)</li>
+			<li> The final result is the surface point at parameters \((u, v)\)</li>
+		</ol>
+
+		In code, given an \( n \times n \) grid of control points, we use a for loop that repeatedly calls <code>BezierPatch::evaluate1D</code> using \(u\) on each row of points to produce a list of n intermediate points. Then, we call <code>BezierPatch::evaluate1D</code> on this new row using \(v\) to get our final point. Within the <code>BezierPatch::evaluate1D</code> function, we repeatedly call <code>BezierPatch::evaluateStep</code>, similar to the process described in Part 1.
+
 		<blockquote>
 			Show a screenshot of <code>bez/teapot.bez</code> (not <code>.dae</code>) evaluated by your implementation.
 		</blockquote>
+
+		<figure>
+			<img src="imgs/part2_teapot.png" style="width:400px"/>
+		</figure>
 
 		<h2>Section II: Triangle Meshes and Half-Edge Data Structure</h2>
 
