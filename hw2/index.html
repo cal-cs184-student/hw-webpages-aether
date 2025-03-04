@@ -210,9 +210,32 @@
 			Briefly explain how you implemented the area-weighted vertex normals.
 		</blockquote>
 
+		To compute the area-weighted normal at a vertex, we iterate over all incident faces using the halfedge structure starting from <code>this->halfedge()</code>. At each halfedge, we retrieve the corresponding face \(f\) and its three vertices, stored in an array <code>pts</code>. The area of face \(f\) is then calculated as
+
+		\[
+		\text{area} = \frac{1}{2} \| ( \text{pts}[1] - \text{pts}[0] ) \times ( \text{pts}[2] - \text{pts}[0] ) \|
+		\]
+
+		The area-weighted face normal is then <code> area * f->normal()</code>, which is added to an accumulator <code>Vector3D</code> variable. This process repeats for each outgoing halfedge, which we iterate through by calling <code>h = h->twin()->next()</code>. After processing all adjacent faces, we normalize the final vector using <code>ret.unit()</code>. During this traversal, we also check whether the current halfedge is on a boundary and skip its corresponding face if necessary.
+
 		<blockquote>
 			Show screenshots of <code>dae/teapot.dae</code> (not <code>.bez</code>) comparing teapot shading with and without vertex normals. Use Q to toggle default flat shading and Phong shading.
 		</blockquote>
+
+		<div style="display: flex; flex-direction: column; align-items: center;">
+			<table style="width: 100%; text-align: center; border-collapse: collapse;">
+			  <tr>
+				<td style="text-align: center; padding: 10px">
+				  <img src="imgs/part3_mesh_no_normals.png" width="400px"/>
+				  <figcaption>Flat Shading</figcaption>
+				</td>
+				<td style="text-align: center; padding: 10px">
+				  <img src="imgs/part3_normals.png" width="400px"/>
+				  <figcaption>Phong Shading</figcaption>
+				</td>
+			  </tr>
+			</table>
+		</div>
 
 		<h3>Part 4: Edge Flip</h3>
 		
