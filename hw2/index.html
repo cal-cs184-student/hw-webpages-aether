@@ -348,11 +348,11 @@
 			  <tr>
 				<td style="text-align: center; padding: 10px">
 				  <img src="imgs/part5_ec_presplit.png" width="400px"/>
-				  <figcaption>Before Edge Splits + Flips</figcaption>
+				  <figcaption>Before Edge Splits</figcaption>
 				</td>
 				<td style="text-align: center; padding: 10px">
 				  <img src="imgs/part5_ec_postsplit.png" width="400px"/>
-				  <figcaption>After Edge Splits + Flips</figcaption>
+				  <figcaption>After Edge Splits</figcaption>
 				</td>
 			  </tr>
 			</table>
@@ -364,9 +364,23 @@
 			Briefly explain how you implemented the loop subdivision and describe any interesting implementation / debugging tricks you have used.
 		</blockquote>
 
+		For the most part, we followed the comments already given to us in a 5-step procedure:
+
+		<ol>
+			<li> For a given vertex, we loop through and collect all of the adjacent vertices. By using the degree of the vertex, and the formulas given to us, we then update the <code>newPosition</code> of each vertex. Additionally, we set <code>isNew</code> as false for each vertex.</li>
+			<li> By again looping through nearby vertices, we update the <code>newPosition</code> of each edge using the formula given to us. Additionally, we set <code>isNew</code> as false for each vertex.</li>
+			<li> Looping through the original edges, we split each edge, making sure to mark<code>isNew</code> for both the new vertex and new edges. At this point, we also assign the previously computed edge <code>newPosition</code> to the newly created vertex.</li>
+			<li> Looping through all edges, we flip any new edge that connects an old and new vertex by using the previously set <code>isNew</code> values.</li>
+			<li> Finally, we update the <code>position</code> values for all vertices to their corresponding <code>newPosition</code> values.</li>
+		</ol>
+
+		In this section, we encountered a few problematic bugs. For Steps 2 and 3, we realized that if we were to set all newly added edges as new, we would mistakenly set part of the old edge to also be set as new, which messed up the edge splits. This mattered, since in Step 4, we flip all new edges, but this does not include the split halves of the original edge. Additionally, we forgot to reset the values of <code>isNew</code> at the start of every <code>upsample</code> call, meaning that multiple subdivisions did not work as intended. Debugging these errors was pretty painful, but one thing that helped was first implementing Steps 3 and 4, as we could check whether 4-1 subdivision was working properly. After that, debugging the other steps was much easier.
+
 		<blockquote>
 			Take some notes, as well as some screenshots, of your observations on how meshes behave after loop subdivision. What happens to sharp corners and edges? Can you reduce this effect by pre-splitting some edges?
 		</blockquote>
+
+		
 
 		<blockquote>
 			Load <code>dae/cube.dae</code>. Perform several iterations of loop subdivision on the cube. Notice that the cube becomes slightly asymmetric after repeated subdivisions. Can you pre-process the cube with edge flips and splits so that the cube subdivides symmetrically? Document these effects and explain why they occur. Also explain how your pre-processing helps alleviate the effects.
