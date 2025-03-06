@@ -335,13 +335,28 @@
 			Write about your eventful debugging journey, if you have experienced one.
 		</blockquote>
 
-		Thanks to the meticulous labeling and preprocessing as in Part 4, we were fortunate to avoid any major bugs throughout our implementation. One bug that we did encounter was in Step 5, where we forgot to reassign the neighbors for one of the halfedges. However, by cross-referencing our diagram with our code, we were able to solve this issue relatively quickly.
+		Thanks to the meticulous labeling and preprocessing we did in Part 4, we were fortunate to avoid any major bugs throughout our implementation. One bug we did encounter occurred in Step 5, where we forgot to reassign the neighbors of one of the halfedges. However, by carefully cross-referencing our diagram with our code, we were able to identify and resolve the issue relatively quickly. While working on the Extra Credit, we also realized that we had forgotten to divide the halfedges on the boundary face. Once again, we were able to fix this by referring back to our diagram, which we adjusted to account for the boundary case.
 
 		<blockquote>
 			<b>Extra Credit</b>: If you have implemented support for boundary edges, show screenshots of your implementation properly handling split operations on boundary edges.
 		</blockquote>
 
-		
+		Since we had a labeled diagram, implementing edge splitting for boundary edges was relatively easy. We simply took the elements that would not be present or relevant, such as <code>{h4, h5, h7, h8, v3}</code> and did not reassign them, as we no longer assume that the opposing face is a triangle (since it is a boundary face). Similarly, we did not create new elements such as <code>{f3, e3, h14, h15}</code> for the same reason. After removing these operations, we also slightly modified the neighbor assignment for <code>h13</code> as we could no longer assume it was part of a triangular face.
+
+		<div style="display: flex; flex-direction: column; align-items: center;">
+			<table style="width: 100%; text-align: center; border-collapse: collapse;">
+			  <tr>
+				<td style="text-align: center; padding: 10px">
+				  <img src="imgs/part5_ec_presplit.png" width="400px"/>
+				  <figcaption>Before Edge Splits + Flips</figcaption>
+				</td>
+				<td style="text-align: center; padding: 10px">
+				  <img src="imgs/part5_ec_postsplit.png" width="400px"/>
+				  <figcaption>After Edge Splits + Flips</figcaption>
+				</td>
+			  </tr>
+			</table>
+		</div>
 
 		<h3>Part 6: Loop Subdivision for Mesh Upsampling</h3>
 		
