@@ -79,12 +79,12 @@
 		De Casteljau's algorithm is a recursive method used to evaluate Bezier curves at a given parameter \(t\). It works by linearly interpolating between control points until only one point remains, which is the point on the curve at \(t\). Given our control points, we do the following:
 
 		<ol>
-			<li> For each pair of consecutive points, compute a new point using linear interpolation: \( P_{new} = (1 - t) \times P_i + t \times P_{i+1} \)</li>
-			<li> Repeat Step 1 on the new set of points</li>
-			<li> Continue recursively until only one point is left &mdash; this is the curve point at \(t\)</li>
+			<li> For each pair of consecutive points, compute a new point using linear interpolation: \( P_{new} = (1 - t) \times P_i + t \times P_{i+1} \).</li>
+			<li> Repeat Step 1 on the new set of points.</li>
+			<li> Continue recursively until only one point is left &mdash; this is the curve point at \(t\).</li>
 		</ol>
 
-		In code, given \( n \) control points, we use a while loop that repeatedly calls <code>BezierPatch::evaluateStep</code> on our current list of control points until its length reaches \( 1 \). Within the <code>BezierPatch::evaluateStep</code> function, given \( n \) points, we perform \( n - 1 \) interpolations by iterating through the list of points using a for loop.
+		In code, given \( n \) control points, we use a while loop that repeatedly calls <code>evaluateStep</code> on our current list of control points until its length reaches \( 1 \). Within the <code>evaluateStep</code> function, given \( n \) points, we perform \( n - 1 \) interpolations by iterating through the list of points using a for loop.
 
 		<blockquote>
 			Take a look at the provided <code>.bzc</code> files and create your own Bezier curve with 6 control points of your choosing. Use this Bezier curve for your screenshots below.
@@ -186,12 +186,12 @@
 		De Casteljau's algorithm extends to Bezier surfaces by applying the same recursive interpolation used for Bezier curves, but in two parameters, \(u\) and \(v\).
 
 		<ol>
-			<li> For a Bezier surface defined by a grid of control points, apply 1D de Casteljau along each row of points with a fixed \(u\)</li>
-			<li> Once we have one interpolated point from each row, apply 1D de Casteljau on these points along \(v\)</li>
-			<li> The final result is the surface point at parameters \((u, v)\)</li>
+			<li> For a Bezier surface defined by a grid of control points, apply 1D de Casteljau along each row of points with a fixed \(u\).</li>
+			<li> Once we have one interpolated point from each row, apply 1D de Casteljau on these points along \(v\).</li>
+			<li> The final result is the surface point at parameters \((u, v)\).</li>
 		</ol>
 
-		In code, given an \( n \times n \) grid of control points, we use a for loop that repeatedly calls <code>BezierPatch::evaluate1D</code> using \(u\) on each row of points to produce a list of n intermediate points. Then, we call <code>BezierPatch::evaluate1D</code> on this new row using \(v\) to get our final point. Within the <code>BezierPatch::evaluate1D</code> function, we repeatedly call <code>BezierPatch::evaluateStep</code>, similar to the process described in Part 1.
+		In code, given an \( n \times n \) grid of control points, we use a for loop that repeatedly calls <code>evaluate1D</code> using \(u\) on each row of points to produce a list of n intermediate points. Then, we call <code>evaluate1D</code> on this new row using \(v\) to get our final point. Within the <code>evaluate1D</code> function, we repeatedly call <code>evaluateStep</code>, similar to the process described in Part 1.
 
 		<blockquote>
 			Show a screenshot of <code>bez/teapot.bez</code> (not <code>.dae</code>) evaluated by your implementation.
@@ -242,13 +242,39 @@
 			Briefly explain how you implemented the edge flip operation and describe any interesting implementation / debugging tricks you have used.
 		</blockquote>
 
+		We first drew a detailed diagram as seen in <a href="http://15462.courses.cs.cmu.edu/fall2015content/misc/HalfedgeEdgeOpImplementationGuide.pdf">this link</a>, making sure to label all visible halfedges, edges, vertices, and faces relevant to the two triangles we are performing our operation relative to. Although this seems unnecessary, this ultimately saved us a lot of time when debugging. Our implementation was then structured as follows:
+
+		<ol>
+			<li> We first check if the edge is on a boundary using <code>isBoundary</code>. If the edge is on a boundary, we simply return the original <code>EdgeIter</code>.</li>
+			<li> If not, we create and assign 10 <code>HalfedgeIter</code> objects, 4 <code>VertexIter</code> objects, 4 <code>EdgeIter</code> objects, and 2 <code>FaceIter</code> objects, as labled in our diagram. Note that we do not use all of them later, but we include them for thoroughness and to assist with debugging.</li>
+			<li> Next, we reassign the neighbors of 6 existing halfedges to reflect the edge flip.</li>
+			<li> Finally, we reassign the halfedges of the 2 vertices and 2 faces whose halfedges may have been altered by this operation and return the flipped edge.</li>
+		</ol>
+
 		<blockquote>
 			Show screenshots of the teapot before and after some edge flips.
 		</blockquote>
 
+		<div style="display: flex; flex-direction: column; align-items: center;">
+			<table style="width: 100%; text-align: center; border-collapse: collapse;">
+			  <tr>
+				<td style="text-align: center; padding: 10px">
+				  <img src="imgs/part4_preflip.png" width="400px"/>
+				  <figcaption>Before Edge Flips</figcaption>
+				</td>
+				<td style="text-align: center; padding: 10px">
+				  <img src="imgs/part4_postflip.png" width="400px"/>
+				  <figcaption>After Edge Flips</figcaption>
+				</td>
+			  </tr>
+			</table>
+		</div>
+
 		<blockquote>
 			Write about your eventful debugging journey, if you have experienced one.
 		</blockquote>
+
+		Thanks to the meticulous labeling and preprocessing we carried out, we were fortunate to avoid any major bugs throughout our implementation. However, we did encounter a minor bug caused by a small typo in one of our <code>setNeighbors</code> function calls. To resolve this, we carefully cross-referenced our diagram with our code, checking each halfedge assignment to ensure that they matched exactly. This process not only helped us identify and fix the typo quickly but also reinforced the accuracy of our overall structure, giving us greater confidence in the correctness of our implementation.
 
 		<h3>Part 5: Edge Split</h3>
 		
@@ -256,21 +282,66 @@
 			Briefly explain how you implemented the edge split operation and describe any interesting implementation / debugging tricks you have used.
 		</blockquote>
 
+		We first drew a detailed diagram, as seen in <a href="http://15462.courses.cs.cmu.edu/fall2015content/misc/HalfedgeEdgeOpImplementationGuide.pdf">this link</a>, carefully labeling all visible halfedges, edges, vertices, and faces relevant to the two triangles involved in our operation. Although this may seem unnecessary, it ultimately saved us a significant amount of time during debugging. With this reference in place, our implementation proceeded as follows:
+
+		<ol>
+			<li> We first check if the edge is on a boundary using <code>isBoundary</code>. If the edge is on a boundary, we follow a different procedure (detailed later in the Extra Credit section).</li>
+			<li> If not, we create 10 <code>HalfedgeIter</code> objects, 4 <code>VertexIter</code> objects, 1 <code>EdgeIter</code> object, and 2 <code>FaceIter</code> objects, as labeled in our diagram. While we do not use all of these later, we include them for thoroughness and to assist with debugging.</li>
+			<li> We also create 6 new <code>HalfedgeIter</code> objects, 1 new <code>VertexIter</code> object, 3 new <code>EdgeIter</code> objects, and 2 new <code>FaceIter</code> objects, all of which result from the edge split. </li>
+			<li> For these newly created objects, we populate their fields accordingly. For the new vertices, faces, and edges, we assign them to their respective halfedges. For the new halfedges, we set their neighbors as specified in the diagram. Additionally, we set the position of the new vertex to the average of <code>v0</code> and <code>v1</code> from the diagram.</li>
+			<li> Next, we reassign the neighbors of 5 existing halfedges to reflect the edge flip.</li>
+			<li> Finally, we reassign the halfedges of the 1 vertex and 2 edges whose halfedges may have been altered by this operation and return the newly created vertex.</li>
+		</ol>
+
 		<blockquote>
 			Show screenshots of a mesh before and after some edge splits.
 		</blockquote>
+
+		<div style="display: flex; flex-direction: column; align-items: center;">
+			<table style="width: 100%; text-align: center; border-collapse: collapse;">
+			  <tr>
+				<td style="text-align: center; padding: 10px">
+				  <img src="imgs/part5_presplit.png" width="400px"/>
+				  <figcaption>Before Edge Splits</figcaption>
+				</td>
+				<td style="text-align: center; padding: 10px">
+				  <img src="imgs/part5_postsplit.png" width="400px"/>
+				  <figcaption>After Edge Splits</figcaption>
+				</td>
+			  </tr>
+			</table>
+		</div>
 
 		<blockquote>
 			Show screenshots of a mesh before and after a combination of both edge splits and edge flips.
 		</blockquote>
 
+		<div style="display: flex; flex-direction: column; align-items: center;">
+			<table style="width: 100%; text-align: center; border-collapse: collapse;">
+			  <tr>
+				<td style="text-align: center; padding: 10px">
+				  <img src="imgs/part5_presplitflip.png" width="400px"/>
+				  <figcaption>Before Edge Splits + Flips</figcaption>
+				</td>
+				<td style="text-align: center; padding: 10px">
+				  <img src="imgs/part5_postsplitflip.png" width="400px"/>
+				  <figcaption>After Edge Splits + Flips</figcaption>
+				</td>
+			  </tr>
+			</table>
+		</div>
+
 		<blockquote>
 			Write about your eventful debugging journey, if you have experienced one.
 		</blockquote>
 
+		Thanks to the meticulous labeling and preprocessing as in Part 4, we were fortunate to avoid any major bugs throughout our implementation. One bug that we did encounter was in Step 5, where we forgot to reassign the neighbors for one of the halfedges. However, by cross-referencing our diagram with our code, we were able to solve this issue relatively quickly.
+
 		<blockquote>
 			<b>Extra Credit</b>: If you have implemented support for boundary edges, show screenshots of your implementation properly handling split operations on boundary edges.
 		</blockquote>
+
+		
 
 		<h3>Part 6: Loop Subdivision for Mesh Upsampling</h3>
 		
