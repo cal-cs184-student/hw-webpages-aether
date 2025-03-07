@@ -379,12 +379,40 @@
 		<blockquote>
 			Take some notes, as well as some screenshots, of your observations on how meshes behave after loop subdivision. What happens to sharp corners and edges? Can you reduce this effect by pre-splitting some edges?
 		</blockquote>
+		<div style="display: flex; flex-direction: column; align-items: center;">
+			<table style="width: 100%; text-align: center; border-collapse: collapse;">
+			  <tr>
+				<td style="text-align: center; padding: 10px">
+				  <img src="imgs/subdivision2.png" width="400px"/>
+				  <figcaption>2 subdivision</figcaption>
+				</td>
+				<td style="text-align: center; padding: 10px">
+				  <img src="imgs/subdivision3.png" width="400px"/>
+				  <figcaption>3 subdivisions</figcaption>
+				</td>
+				td style="text-align: center; padding: 10px">
+				  <img src="imgs/subdivision1.png" width="400px"/>
+				  <figcaption>1 subdivisions</figcaption>
+				</td>
+			  </tr>
+			</table>
+		</div>
 
-
+		Corners and edges get smoothed out, as a result of the upsampling and the new vertex positions that are found. The overall shape becomes apparently smoother. Manual pre splitting before running the algoirthm does reduce the effect as it gives the algorithm more control points when you a high curvature edge, so it can still maintain the high definition.
+		
 
 		<blockquote>
 			Load <code>dae/cube.dae</code>. Perform several iterations of loop subdivision on the cube. Notice that the cube becomes slightly asymmetric after repeated subdivisions. Can you pre-process the cube with edge flips and splits so that the cube subdivides symmetrically? Document these effects and explain why they occur. Also explain how your pre-processing helps alleviate the effects.
 		</blockquote>
+
+		
+
+		You can preprocess the cube by splitting all the faces to ensure there are four triangles per face. When all the faces are have 4 faces, the subdivisions that occur when you press p happen symmetrically in each face, rather than going in different directions depending on the face and the rotation of the edge it initially entailed. The results looks as follows:
+
+		<figure>
+			<img src="imgs/symmetriccube.png" width="50000px"\>
+		</figure>
+
 
 		<blockquote>
 			<b>Extra Credit</b>: Support meshes with boundary.
@@ -398,12 +426,23 @@
 				
 			\[
 			V' = \frac{1}{2} (V_1 + V_2) + \frac{1}{8} (V_3 + V_4) - \frac{1}{16} (V_5 + V_6 + V_7 + V_8)
-			\] where v1 and v2 are the endpoints of the edge being divided, v3 and v4 are the endpoints of the vertices in the adjacent triangle, and v5-v8 are the four corners in the second-ring neighbours of the edge.</li>
-			<li>
-				We also implemented uniform loop subdividing. This is a technique to increase resolution without smoothing. It involved not updating the vertex positions after subdivision, and essentially just seems like breaking the mesh into infinitely smaller triangles without smoothing.
-			</li>
-			<li>The last method we implemented is adaptive loop subdividing were we added a condition of subdivision only if the edge in question was greater than <code>0.5 * average_length</code> of all edges in the mesh. This reduces the number of triangles in already well defined regions</li>
+			\] where v1 and v2 are the endpoints of the edge being divided, v3 and v4 are the endpoints of the vertices in the adjacent triangle, and v5-v8 are the four corners in the second-ring neighbours of the edge. Attached is a picture of an example of butterfly subdivision on cube.dae</li>	
+
+			<figure>
+			<img src="imgs/butterfly.png" style="width:400px"/>
+			</figure>
+
+			<li>The next method implemented is adaptive loop subdividing were we added a condition of subdivision only if the edge in question was greater than <code>0.5 * average_length</code> of all edges in the mesh. This reduces the number of triangles in already well defined regions.  Attached is a picture of an example of adaptive loop subdivision on cube.dae</li>
+			<figure>
+				<img src="imgs/adaptive.png" style="width:400px"/>
+				</figure>
 		</ul>
+			<li>
+				We also implemented uniform loop subdividing. This is a technique to increase resolution without smoothing. It involved not updating the vertex positions after subdivision, and essentially just seems like breaking the mesh into infinitely smaller triangles without smoothing.  Attached is a picture of an example of uniform loop subdivision on cube.dae
+			</li>
+			<figure>
+				<img src="imgs/uniform.png" style="width:400px"/>
+				</figure>
 
 		<h2>(Optional) Section III: Potential Extra Credit - Art Competition: Model something Creative</h2>
 
