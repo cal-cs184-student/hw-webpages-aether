@@ -66,7 +66,7 @@
 		-->
 
 		<h2>Overview</h2>
-		Give a high-level overview of what you implemented in this homework. Think about what you've built as a whole. Share your thoughts on what interesting things you've learned from completing the homework.
+		In this assignment, we implemented Bezier curves and surfaces using de Casteljau's algorithm, explored triangle mesh manipulation with the half-edge data structure, and applied Loop Subdivision for mesh upsampling. We developed methods for computing vertex normals, edge flips, and edge splits, enabling smoother and more adaptable mesh refinement. Additionally, we experimented with alternative subdivision schemes, including Butterfly and Adaptive Loop subdivision, to better preserve sharp features. Through algorithmic implementation, debugging, and visual analysis, we gained a deeper understanding of geometric modeling, subdivision techniques, and their impact on mesh quality.
 
 		<h2>Section I: Bezier Curves and Surfaces</h2>
 
@@ -242,6 +242,21 @@
 			Briefly explain how you implemented the edge flip operation and describe any interesting implementation / debugging tricks you have used.
 		</blockquote>
 
+		<div style="display: flex; flex-direction: column; align-items: center;">
+			<table style="width: 100%; text-align: center; border-collapse: collapse;">
+			  <tr>
+				<td style="text-align: center; padding: 10px">
+				  <img src="imgs/part4_diagram_pre.png" width="400px"/>
+				  <figcaption>Before Edge Flip</figcaption>
+				</td>
+				<td style="text-align: center; padding: 10px">
+				  <img src="imgs/part4_diagram_post.png" width="400px"/>
+				  <figcaption>After Edge Flip</figcaption>
+				</td>
+			  </tr>
+			</table>
+		</div>
+
 		We first drew a detailed diagram as seen in <a href="http://15462.courses.cs.cmu.edu/fall2015content/misc/HalfedgeEdgeOpImplementationGuide.pdf">this link</a>, making sure to label all visible halfedges, edges, vertices, and faces relevant to the two triangles we are performing our operation relative to. Although this seems unnecessary, this ultimately saved us a lot of time when debugging. Our implementation was then structured as follows:
 
 		<ol>
@@ -281,6 +296,21 @@
 		<blockquote>
 			Briefly explain how you implemented the edge split operation and describe any interesting implementation / debugging tricks you have used.
 		</blockquote>
+
+		<div style="display: flex; flex-direction: column; align-items: center;">
+			<table style="width: 100%; text-align: center; border-collapse: collapse;">
+			  <tr>
+				<td style="text-align: center; padding: 10px">
+				  <img src="imgs/part5_diagram_pre.png" width="400px"/>
+				  <figcaption>Before Edge Split</figcaption>
+				</td>
+				<td style="text-align: center; padding: 10px">
+				  <img src="imgs/part5_diagram_post.png" width="400px"/>
+				  <figcaption>After Edge Split</figcaption>
+				</td>
+			  </tr>
+			</table>
+		</div>
 
 		We first drew a detailed diagram, as seen in <a href="http://15462.courses.cs.cmu.edu/fall2015content/misc/HalfedgeEdgeOpImplementationGuide.pdf">this link</a>, carefully labeling all visible halfedges, edges, vertices, and faces relevant to the two triangles involved in our operation. Although this may seem unnecessary, it ultimately saved us a significant amount of time during debugging. With this reference in place, our implementation proceeded as follows:
 
@@ -379,27 +409,33 @@
 		<blockquote>
 			Take some notes, as well as some screenshots, of your observations on how meshes behave after loop subdivision. What happens to sharp corners and edges? Can you reduce this effect by pre-splitting some edges?
 		</blockquote>
+		
 		<div style="display: flex; flex-direction: column; align-items: center;">
 			<table style="width: 100%; text-align: center; border-collapse: collapse;">
 			  <tr>
 				<td style="text-align: center; padding: 10px">
-				  <img src="imgs/subdivision2.png" width="400px"/>
-				  <figcaption>2 subdivision</figcaption>
+				  <img src="imgs/part6_torus_0.png" width="400px"/>
+				  <figcaption>0 Subdivisions</figcaption>
 				</td>
 				<td style="text-align: center; padding: 10px">
-				  <img src="imgs/subdivision3.png" width="400px"/>
-				  <figcaption>3 subdivisions</figcaption>
+				  <img src="imgs/part6_torus_1.png" width="400px"/>
+				  <figcaption>1 Subdivision</figcaption>
 				</td>
-				td style="text-align: center; padding: 10px">
-				  <img src="imgs/subdivision1.png" width="400px"/>
-				  <figcaption>1 subdivisions</figcaption>
+			  </tr>
+			  <tr>
+				<td style="text-align: center; padding: 10px">
+				  <img src="imgs/part6_torus_3.png" width="400px"/>
+				  <figcaption>3 Subdivisions</figcaption>
+				</td>
+				<td style="text-align: center; padding: 10px">
+				  <img src="imgs/part6_torus_5.png" width="400px"/>
+				  <figcaption>5 Subdivisions</figcaption>
 				</td>
 			  </tr>
 			</table>
 		</div>
 
-		Corners and edges get smoothed out, as a result of the upsampling and the new vertex positions that are found. The overall shape becomes apparently smoother. Manual pre splitting before running the algoirthm does reduce the effect as it gives the algorithm more control points when you a high curvature edge, so it can still maintain the high definition.
-		
+		Corners and edges become smoothed out as a result of upsampling and the new vertex positions that are generated. The overall shape appears noticeably smoother. Manually pre-splitting before running the algorithm helps reduce this effect, as it provides the algorithm with more control points along high-curvature edges, allowing it to better preserve sharp features. However, we also observe that the additional edges created during splitting can cause the shape to become more distorted, as the algorithm has more control points to manipulate.
 
 		<blockquote>
 			Load <code>dae/cube.dae</code>. Perform several iterations of loop subdivision on the cube. Notice that the cube becomes slightly asymmetric after repeated subdivisions. Can you pre-process the cube with edge flips and splits so that the cube subdivides symmetrically? Document these effects and explain why they occur. Also explain how your pre-processing helps alleviate the effects.
@@ -407,42 +443,102 @@
 
 		
 
-		You can preprocess the cube by splitting all the faces to ensure there are four triangles per face. When all the faces are have 4 faces, the subdivisions that occur when you press p happen symmetrically in each face, rather than going in different directions depending on the face and the rotation of the edge it initially entailed. The results looks as follows:
+		You can preprocess the cube by splitting each face into four triangles. This ensures that all faces have a consistent structure before subdivision. With this setup, when you subdivide, the algorithm applies the same pattern to every vertex/face, keeping the subdivisions symmetrical. Without this step, faces may subdivide differently based on their initial orientation, leading to asymmetry. Preprocessing helps maintain uniformity and produces smoother, more consistent results.
 
-		<figure>
-			<img src="imgs/symmetriccube.png" width="50000px"\>
-		</figure>
+		<div style="display: flex; flex-direction: column; align-items: center;">
+			<table style="width: 100%; text-align: center; border-collapse: collapse;">
+			  <tr>
+				<td style="text-align: center; padding: 10px">
+				  <img src="imgs/part6_subdivision0.png" width="400px"/>
+				  <figcaption>0 Subdivisions</figcaption>
+				</td>
+				<td style="text-align: center; padding: 10px">
+				  <img src="imgs/part6_split0.png" width="400px"/>
+				  <figcaption>0 Subdivisions</figcaption>
+				</td>
+			  </tr>
+			  <tr>
+				<td style="text-align: center; padding: 10px">
+				  <img src="imgs/part6_subdivision2.png" width="400px"/>
+				  <figcaption>2 Subdivisions</figcaption>
+				</td>
+				<td style="text-align: center; padding: 10px">
+				  <img src="imgs/part6_split2.png" width="400px"/>
+				  <figcaption>2 Subdivisions</figcaption>
+				</td>
+			  </tr>
+			  <tr>
+				<td style="text-align: center; padding: 10px">
+				  <img src="imgs/part6_subdivision4.png" width="400px"/>
+				  <figcaption>4 Subdivisions</figcaption>
+				</td>
+				<td style="text-align: center; padding: 10px">
+				  <img src="imgs/part6_split4.png" width="400px"/>
+				  <figcaption>4 Subdivisions</figcaption>
+				</td>
+			  </tr>
+			</table>
+		</div>
 
 
 		<blockquote>
 			<b>Extra Credit</b>: Support meshes with boundary.
 		</blockquote>
 
+		To implement boundary support, we first modified the weightage of the original vertices and newly created vertices to match the two-stage process as shown in the slides. Additionally, since we had already implemented edge splitting for boundary edges in Part 5, we were able to use that here, making sure that the edge flipping in the upsample function  was not flipping the boundary edges.
+
+		<div style="display: flex; flex-direction: column; align-items: center;">
+
+			<figure>
+				<img src="imgs/part6_boundary_0.png" style="width:400px"/>
+				<figcaption>Original Mesh</figcaption>
+			</figure>
+
+			<table style="width: 100%; text-align: center; border-collapse: collapse;">
+			  <tr>
+				<td style="text-align: center; padding: 10px">
+				  <img src="imgs/part6_boundary_1.png" width="400px"/>
+				  <figcaption>No Boundary Support</figcaption>
+				</td>
+				<td style="text-align: center; padding: 10px">
+				  <img src="imgs/part6_boundary_2.png" width="400px"/>
+				  <figcaption>Boundary Support</figcaption>
+				</td>
+			  </tr>
+			</table>
+		</div>
+
 		<blockquote>
 			<b>Extra Credit</b>: Implement additional subdivision schemes.
 		</blockquote>
 		<ul>
-			<li>The first subdivision scheme we implemented was butterfly subdivision. This method of subdivision is very similar to that loop subdivision except it has discrepancies in the way the new vertex positions are calculated. Whilst it is still a weighted sub of nearby vertices, butterfly upsampling preserves sharper features compared to loop subdivision as it weighs a greater number of vertices(8 in comparison to 4). The actual formula for calculating the new vertex positions is :
+			<li>The first subdivision scheme we implemented was butterfly subdivision. This method of subdivision is very similar to that loop subdivision except it has discrepancies in the way the new vertex positions are calculated. Whilst it is still a weighted sub of nearby vertices, butterfly upsampling preserves sharper features compared to loop subdivision as it weighs a greater number of vertices(8 in comparison to 4). The actual formula for calculating the new vertex positions is:
 				
 			\[
 			V' = \frac{1}{2} (V_1 + V_2) + \frac{1}{8} (V_3 + V_4) - \frac{1}{16} (V_5 + V_6 + V_7 + V_8)
-			\] where v1 and v2 are the endpoints of the edge being divided, v3 and v4 are the endpoints of the vertices in the adjacent triangle, and v5-v8 are the four corners in the second-ring neighbours of the edge. Attached is a picture of an example of butterfly subdivision on cube.dae</li>	
+			\] where v1 and v2 are the endpoints of the edge being divided, v3 and v4 are the endpoints of the vertices in the adjacent triangle, and v5-v8 are the four corners in the second-ring neighbours of the edge. Also, we note that the the original vertices are not repositioned.</li>
 
 			<figure>
-			<img src="imgs/butterfly.png" style="width:400px"/>
+				<img src="imgs/part6_butterfly.png" style="width:400px"/>
+				<figcaption>Butterfly Subdivision</figcaption>
 			</figure>
 
-			<li>The next method implemented is adaptive loop subdividing were we added a condition of subdivision only if the edge in question was greater than <code>0.5 * average_length</code> of all edges in the mesh. This reduces the number of triangles in already well defined regions.  Attached is a picture of an example of adaptive loop subdivision on cube.dae</li>
+			<li>The next method implemented is adaptive loop subdivision as described in <a href="https://www.researchgate.net/publication/2554610_Adaptive_Subdivision_Schemes_for_Triangular_Meshes">this paper</a>. We added a condition of subdivision only if the edge in question was between two faces whose dihedral angle was less than 30 degrees. Smooth areas get subdivided, while sharp edges are preserved. Additionally, it prevents over-subdividing sharp features, keeping crisp edges intact.</li>
+
 			<figure>
-				<img src="imgs/adaptive.png" style="width:400px"/>
-				</figure>
+				<img src="imgs/part6_adaptive.png" style="width:400px"/>
+				<figcaption>Adaptive Loop Subdivision</figcaption>
+			</figure>
 		</ul>
 			<li>
-				We also implemented uniform loop subdividing. This is a technique to increase resolution without smoothing. It involved not updating the vertex positions after subdivision, and essentially just seems like breaking the mesh into infinitely smaller triangles without smoothing.  Attached is a picture of an example of uniform loop subdivision on cube.dae
+				We also implemented uniform loop subdividing. This is a technique to increase resolution without smoothing. It involved not updating the vertex positions after subdivision, and essentially just seems like breaking the mesh into infinitely smaller triangles without smoothing.
 			</li>
+
 			<figure>
-				<img src="imgs/uniform.png" style="width:400px"/>
-				</figure>
+				<img src="imgs/part6_uniform.png" style="width:400px"/>
+				<figcaption>Uniform Loop Subdivision</figcaption>
+			</figure>
+		</ul>
 
 		<h2>(Optional) Section III: Potential Extra Credit - Art Competition: Model something Creative</h2>
 
