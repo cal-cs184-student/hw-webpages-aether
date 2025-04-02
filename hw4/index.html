@@ -302,9 +302,42 @@
 			Describe your implementation of handling self-collisions.
 		</blockquote>
 
+		<p>
+			To efficiently resolve self-collisions in the cloth simulation, I used spatial hashing to group nearby point masses and limit unnecessary pairwise comparisons. The spatial map is built in <code>build_spatial_map()</code> by hashing each point mass's position into a 3D grid cell. The <code>hash_position()</code> function computes this hash by first dividing space into boxes of size <code>w = 3 * width / num_width_points</code>, <code>h = 3 * height / num_height_points</code>, and <code>t = max(w, h)</code> — and then floors  the position coordinates to determine the grid cell. The final hash is calculated as <code>i + j * range + k * range * range</code>, where <code>i</code>, <code>j</code>, and <code>k</code> are the floored grid indices and <code>range</code> is a large constant (e.g., 100000) to ensure uniqueness.
+			</p>
+			
+			<p>
+			During collision resolution in <code>self_collide()</code>, only the point masses within the same cell are checked. If another point mass is within <code>2 * thickness</code>, a correction vector is computed to push the masses apart. This correction is accumulated across all collisions, averaged, and applied to the current point mass's position, scaled by <code>simulation_steps</code> to ensure smooth separation.
+			</p>
+
 		<blockquote>
 			Show us at least 3 screenshots that document how your cloth falls and folds on itself, starting with an early, initial self-collision and ending with the cloth at a more restful state (even if it is still slightly bouncy on the ground).
 		</blockquote>
+
+		<div style="display: flex; flex-direction: column; align-items: center;">
+			<table style="width: 100%; text-align: center; border-collapse: collapse;">
+			  <tr>
+				<td style="text-align: center; padding: 10px">
+				  <img src="imgs/part4_fall1.png" width="300px"/>
+				  <figcaption>Frame 1</figcaption>
+				</td>
+				<td style="text-align: center; padding: 10px">
+				  <img src="imgs/part4_fall2.png" width="300px"/>
+				  <figcaption>Frame 2</figcaption>
+				</td>
+			  </tr>
+			  <tr>
+				<td style="text-align: center; padding: 10px">
+				  <img src="imgs/part4_fall3.png" width="300px"/>
+				  <figcaption>Frame 3</figcaption>
+				</td>
+				<td style="text-align: center; padding: 10px">
+				  <img src="imgs/part4_fall4.png" width="300px"/>
+				  <figcaption>Frame 4</figcaption>
+				</td>
+			  </tr>
+			</table>
+		</div>
 
 		<blockquote>
 			Vary the density as well as ks and describe with words and screenshots how they affect the behavior of the cloth as it falls on itself.
