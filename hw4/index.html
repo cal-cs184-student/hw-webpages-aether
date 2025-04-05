@@ -349,13 +349,72 @@
 			Explain in your own words what is a shader program and how vertex and fragment shaders work together to create lighting and material effects.
 		</blockquote>
 
+		<p>
+			A shader program is a piece of code that is in charge of controlling how objects are drawn on a screen, and it runs in parallel on GPU. The two main shaders used in graphics pipelines are vertex shaders and fragment shaders, and they both work together to create an image in the rendering process.
+			<ul>
+				<li>
+					A vertex shader loops thorugh each vertex of a 3d object. It transform's the vertex into 2d space using matrix projects and passes data along the fragment shader, like texture coordinates, normals, etc. It essentially places the vertices on the screen and gives information to each dot(vertex) that will be used in the fragment shader.
+				</li>
+				<li>
+					A fragemnt shader loops through each pixel that needs to be rendered/drawn. It uses data from each part of the surface given by the vertex shader to calculate the final color of each pixel. The fragment shader is in charge of lighting and material effects, and is in charge of how bright each pixel of the image should be.
+				</li>
+			</ul>
+		</p>
+
+
+
 		<blockquote>
 			Explain the Blinn-Phong shading model in your own words. Show a screenshot of your Blinn-Phong shader outputting only the ambient component, a screen shot only outputting the diffuse component, a screen shot only outputting the specular component, and one using the entire Blinn-Phong model.
 		</blockquote>
 
+		<p>
+			The Blinn-Phong shading model is a method to simulate how light interacts with surfaces to make them look bright/dull/shiny. It is not an accurate representation of how light creates these effects in the real world. It simply makes 3d objects appear more realistic by treating light in three parts: ambient, diffuse, and specular. 
+			
+			<ul>
+				<li>
+					Ambient light is similar to background lighting. It encomasses lighting bouncing around the entire scene and hitting the surface in question basically all directions. It has a glowing feel, in the sense that even parts not directly lit still get a piece of ambient ligth.
+				</li>
+				<li>
+					Diffuse light is strictly light that hits the surface directly, which depends on the angle between light and the surface's normal. The bigger the cosine is between the normal and the direction of the directly hit light is, the brighter that spot is. Diffuse light can be seen when you shine a light at a sphere: the light on the sphere grows dimmmer and dimmer from the apex of where the light is shining.
+				</li>
+				<li>
+					Specular light is the light you find on glossy or like shiny surfaces. This is calculated using a halfway vector, which measures if the halfway vector between the incoming light direction and the viewing direction is aligned with the surface normal. The highlight intensity depends on how close the normal vector and the halfway vector are.
+				</li>
+			</ul>
+		</p>
+
+		<div style="display: flex; flex-direction: column; align-items: center;">
+			<table style="width: 100%; text-align: center; border-collapse: collapse;">
+			  <tr>
+				<td style="text-align: center; padding: 10px">
+				  <img src="imgs/part5_diffuse.png" width="300px"/>
+				  <figcaption>Diffuse</figcaption>
+				</td>
+				<td style="text-align: center; padding: 10px">
+				  <img src="imgs/part5_ambient.png" width="300px"/>
+				  <figcaption>Ambient</figcaption>
+				</td>
+			  </tr>
+			  <tr>
+				<td style="text-align: center; padding: 10px">
+				  <img src="imgs/part5_specular.png" width="300px"/>
+				  <figcaption>Specular</figcaption>
+				</td>
+				<td style="text-align: center; padding: 10px">
+				  <img src="imgs/part5_blinn-phong.png" width="300px"/>
+				  <figcaption>Blinn-Phong</figcaption>
+				</td>
+			  </tr>
+			</table>
+		</div>
 		<blockquote>
 			Show a screenshot of your texture mapping shader using your own custom texture by modifying the textures in /textures/.
 		</blockquote>
+
+		<div style="display: flex; flex-direction: column; align-items: center;">
+			<img src="imgs/part5_texture.png" width="300px"/>
+				  <figcaption>Custom texture</figcaption>
+		</div>
 
 		<blockquote>
 			Show a screenshot of bump mapping on the cloth and on the sphere. Show a screenshot of displacement mapping on the sphere. Use the same texture for both renders. You can either provide your own texture or use one of the ones in the textures directory, BUT choose one that's not the default <code>texture_2.png</code>. Compare the two approaches and resulting renders in your own words. Compare how your the two shaders react to the sphere by changing the sphere mesh's coarseness by using <code>-o 16 -a 16</code> and then <code>-o 128 -a 128</code>.
