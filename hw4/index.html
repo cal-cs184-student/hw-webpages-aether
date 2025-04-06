@@ -349,13 +349,94 @@
 			Explain in your own words what is a shader program and how vertex and fragment shaders work together to create lighting and material effects.
 		</blockquote>
 
+		<p>
+			A shader program is a small program written in GLSL that is used to control how graphics are rendered. It typically consists of two parts: a vertex shader and a fragment shader. The vertex shader processes each vertex, applying transformations like position and normal vector calculations. It outputs the final vertex position and other values (called varyings) to be used later.
+		</p>
+
+		<p>
+			The fragment shader then takes over after the scene has been rasterized into fragments (potential pixels). It uses the data passed from the vertex shader to determine the final color of each fragment, writing it into <code>out_color</code>. Together, these shaders create visual effects like lighting and materials by controlling how geometry is transformed and how pixels are colored based on light, texture, and surface properties.
+		</p>
+
 		<blockquote>
 			Explain the Blinn-Phong shading model in your own words. Show a screenshot of your Blinn-Phong shader outputting only the ambient component, a screen shot only outputting the diffuse component, a screen shot only outputting the specular component, and one using the entire Blinn-Phong model.
 		</blockquote>
 
+		<p>
+			The <strong>Blinn-Phong shading model</strong> is a lighting model used to simulate the interaction of light with a surface. It is composed of three key lighting components—<em>ambient</em>, <em>diffuse</em>, and <em>specular</em>—which are calculated per vertex in the shader. Each component captures a different physical behavior of light and contributes to the realism of rendered scenes.
+		</p>
+
+		<p>
+			The ambient component approximates the background light that is scattered uniformly throughout the scene. In the real world, this light would come from indirect bounces off walls and other surfaces, but in our simplified model, it is represented as a constant value. This ensures that objects remain visible even when they aren't directly lit. In the shader, we model this as:
+		</p>
+
+		<pre><code>vec3 amb = vec3(ka);</code></pre>
+		<p>
+			where <code>ka</code> is a small constant (e.g., 0.1) representing ambient reflectivity. This term is independent of light direction or surface orientation.
+		</p>
+
+		<p>
+			The diffuse component represents the scattering of light across a rough surface. It depends on the angle between the surface normal and the light direction, following Lambert's cosine law. This models how surfaces appear brightest when directly facing the light and dimmer when tilted away. In the shader, we compute it as:
+		</p>
+
+		<pre><code>vec3 diff = kd * ir2 * max(dot(normal, light_dir), 0.0);</code></pre>
+		<p>
+			Here, <code>kd</code> is the diffuse reflectance coefficient, and <code>ir2</code> accounts for the light intensity (via the inverse square law). The <code>dot(normal, light_dir)</code> term ensures light only contributes when it is hitting the front of the surface.
+		</p>
+
+		<p>
+			The specular component models the bright highlights that appear on shiny surfaces where light reflects directly toward the viewer. Instead of using the traditional reflection vector, the Blinn-Phong model introduces a <strong>halfway vector</strong> between the light direction and the view direction:
+		</p>
+
+		<pre><code>vec3 halfway_dir = normalize(view_dir + light_dir);</code></pre>
+
+		<p>
+			The intensity of the specular highlight is determined by the dot product of the normal and this halfway vector, raised to a power <code>p</code> that controls the shininess. The higher the power, the smaller and sharper the highlight:
+		</p>
+
+		<pre><code>vec3 spec = ks * ir2 * pow(max(dot(normal, halfway_dir), 0.0), p);</code></pre>
+
+		<p>
+			Here, <code>ks</code> is the specular reflectivity, and <code>p</code> controls how quickly the specular reflection falls off. A value like <code>p = 100</code> represents a very shiny surface, while lower values produce broader highlights.
+		</p>
+
+		<p>
+			The final light intensity <code>L</code> at a point is the sum of the ambient, diffuse, and specular terms:
+		</p>
+
+		<pre><code>out_color = vec4(amb + diff + spec, 1.0);</code></pre>
+
+		<div style="display: flex; flex-direction: column; align-items: center;">
+			<table style="width: 100%; text-align: center; border-collapse: collapse;">
+			  <tr>
+				<td style="text-align: center; padding: 10px">
+				  <img src="imgs/part5_ambient.png" width="300px"/>
+				  <figcaption>Ambient Component</figcaption>
+				</td>
+				<td style="text-align: center; padding: 10px">
+				  <img src="imgs/part5_diffuse.png" width="300px"/>
+				  <figcaption>Diffuse Component</figcaption>
+				</td>
+			  </tr>
+			  <tr>
+				<td style="text-align: center; padding: 10px">
+				  <img src="imgs/part5_specular.png" width="300px"/>
+				  <figcaption>Specular Component</figcaption>
+				</td>
+				<td style="text-align: center; padding: 10px">
+				  <img src="imgs/part5_phong.png" width="300px"/>
+				  <figcaption>Entire Blinn-Phong</figcaption>
+				</td>
+			  </tr>
+			</table>
+		</div>
+
 		<blockquote>
 			Show a screenshot of your texture mapping shader using your own custom texture by modifying the textures in /textures/.
 		</blockquote>
+
+		<div style="display: flex; flex-direction: column; align-items: center;">
+			<img src="imgs/part5_texture.png" width="400px"/>
+		</div>
 
 		<blockquote>
 			Show a screenshot of bump mapping on the cloth and on the sphere. Show a screenshot of displacement mapping on the sphere. Use the same texture for both renders. You can either provide your own texture or use one of the ones in the textures directory, BUT choose one that's not the default <code>texture_2.png</code>. Compare the two approaches and resulting renders in your own words. Compare how your the two shaders react to the sphere by changing the sphere mesh's coarseness by using <code>-o 16 -a 16</code> and then <code>-o 128 -a 128</code>.
