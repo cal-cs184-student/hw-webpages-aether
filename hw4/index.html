@@ -350,13 +350,13 @@
 		</blockquote>
 
 		<p>
-			A shader program is a piece of code that is in charge of controlling how objects are drawn on a screen, and it runs in parallel on GPU. The two main shaders used in graphics pipelines are vertex shaders and fragment shaders, and they both work together to create an image in the rendering process.
+			A shader program is a piece of code that is in charge of controlling how objects are drawn on a screen, and it runs in parallel (sometimes on GPU). The two main shaders used in graphics pipelines are vertex shaders and fragment shaders, and they both work together to create an image in the rendering process.
 			<ul>
 				<li>
-					A vertex shader loops thorugh each vertex of a 3d object. It transform's the vertex into 2d space using matrix projects and passes data along the fragment shader, like texture coordinates, normals, etc. It essentially places the vertices on the screen and gives information to each dot(vertex) that will be used in the fragment shader.
+					A vertex shader loops through each vertex of a 3D object. It transforms the vertex into 2D space using matrix projects and passes data along the fragment shader, like texture coordinates, normals, etc. It essentially places the vertices on the screen and gives information to each dot (vertex) that will be used in the fragment shader.
 				</li>
 				<li>
-					A fragemnt shader loops through each pixel that needs to be rendered/drawn. It uses data from each part of the surface given by the vertex shader to calculate the final color of each pixel. The fragment shader is in charge of lighting and material effects, and is in charge of how bright each pixel of the image should be.
+					A fragment shader loops through each pixel that needs to be rendered/drawn. It uses data from each part of the surface given by the vertex shader to calculate the final color of each pixel. The fragment shader is in charge of lighting and material effects, and is in charge of how bright each pixel of the image should be.
 				</li>
 			</ul>
 		</p>
@@ -387,22 +387,22 @@
 			<table style="width: 100%; text-align: center; border-collapse: collapse;">
 			  <tr>
 				<td style="text-align: center; padding: 10px">
-				  <img src="imgs/part5_diffuse.png" width="300px"/>
-				  <figcaption>Diffuse</figcaption>
+				  <img src="imgs/part5_ambient.png" width="300px"/>
+				  <figcaption>Ambient Component</figcaption>
 				</td>
 				<td style="text-align: center; padding: 10px">
-				  <img src="imgs/part5_ambient.png" width="300px"/>
-				  <figcaption>Ambient</figcaption>
+				  <img src="imgs/part5_diffuse.png" width="300px"/>
+				  <figcaption>Diffuse Component</figcaption>
 				</td>
 			  </tr>
 			  <tr>
 				<td style="text-align: center; padding: 10px">
 				  <img src="imgs/part5_specular.png" width="300px"/>
-				  <figcaption>Specular</figcaption>
+				  <figcaption>Specular Component</figcaption>
 				</td>
 				<td style="text-align: center; padding: 10px">
-				  <img src="imgs/part5_blinn-phong.png" width="300px"/>
-				  <figcaption>Blinn-Phong</figcaption>
+				  <img src="imgs/part5_phong.png" width="300px"/>
+				  <figcaption>Entire Blinn-Phong</figcaption>
 				</td>
 			  </tr>
 			</table>
@@ -412,8 +412,7 @@
 		</blockquote>
 
 		<div style="display: flex; flex-direction: column; align-items: center;">
-			<img src="imgs/part5_texture.png" width="300px"/>
-				  <figcaption>Custom texture</figcaption>
+			<img src="imgs/part5_texture.png" width="400px"/>
 		</div>
 
 		<blockquote>
