@@ -348,8 +348,8 @@
 			<table style="width: 100%; text-align: center; border-collapse: collapse;">
 			  <tr>
 				<td style="text-align: center; padding: 10px">
-				  <img src="imgs/part4-spring-constant-5,000.png" width="300px"/>
-				  <figcaption>Spring constant 50,000</figcaption>
+				  <img src="imgs/part4-spring-constant-5000.png" width="300px"/>
+				  <figcaption>Spring constant 5000</figcaption>
 				</td>
 				<td style="text-align: center; padding: 10px">
 				  <img src="imgs/part4_density_15.png" width="300px"/>
@@ -358,8 +358,8 @@
 			  </tr>
 			  <tr>
 				<td style="text-align: center; padding: 10px">
-				  <img src="imgs/part4-spring-constant-50,000.png" width="300px"/>
-				  <figcaption>Spring constant 50,000</figcaption>
+				  <img src="imgs/part4-spring-constant-50000.png" width="300px"/>
+				  <figcaption>Spring constant 50000</figcaption>
 				</td>
 				<td style="text-align: center; padding: 10px">
 				  <img src="imgs/part4_density_150.png" width="300px"/>
@@ -369,7 +369,10 @@
 			</table>
 		</div>
 		<p>
-			As Higher densities lead the cloth to folding on itselft in a more randomized way due to the higher chance of it colliding on itself on smaller increments of folds when more dense. The cloth also has higher chances of being pulled apart when the spring constants is low.
+			When the density is increased, the cloth becomes heavier, causing it to fall more quickly and with greater force. This often leads to more randomized and chaotic folding patterns, giving the appearance of a crumpled or tangled cloth.
+		</p>
+		<p>
+			On the other hand, lowering the spring constant results in a more stretchy and less structurally cohesive fabric. The cloth deforms more easily under its own weight, leading to visible stretching and more deformation.
 		</p>
 
 		<h2>Part 5: Shaders</h2>
@@ -390,8 +393,6 @@
 			</ul>
 		</p>
 
-
-
 		<blockquote>
 			Explain the Blinn-Phong shading model in your own words. Show a screenshot of your Blinn-Phong shader outputting only the ambient component, a screen shot only outputting the diffuse component, a screen shot only outputting the specular component, and one using the entire Blinn-Phong model.
 		</blockquote>
@@ -404,7 +405,7 @@
 					Ambient light is similar to background lighting. It encomasses lighting bouncing around the entire scene and hitting the surface in question basically all directions. It has a glowing feel, in the sense that even parts not directly lit still get a piece of ambient ligth.
 				</li>
 				<li>
-					Diffuse light is strictly light that hits the surface directly, which depends on the angle between light and the surface's normal. The bigger the cosine is between the normal and the direction of the directly hit light is, the brighter that spot is. Diffuse light can be seen when you shine a light at a sphere: the light on the sphere grows dimmmer and dimmer from the apex of where the light is shining.
+					Diffuse light is strictly light that hits the surface directly, which depends on the angle between light and the surface's normal. The bigger the cosine is between the normal and the direction of the directly hit light is, the brighter that spot is. Diffuse light can be seen when you shine a light at a sphere: the light on the sphere grows dimmer and dimmer from the apex of where the light is shining.
 				</li>
 				<li>
 					Specular light is the light you find on glossy or like shiny surfaces. This is calculated using a halfway vector, which measures if the halfway vector between the incoming light direction and the viewing direction is aligned with the surface normal. The highlight intensity depends on how close the normal vector and the halfway vector are.
@@ -456,23 +457,23 @@
 				  </td>
 				  <td style="text-align: center; padding: 10px">
 					<img src="imgs/part5_displacement_level1.png" width="300px"/>
-					<figcaption>Displacement shader -o 16 -a 16</figcaption>
+					<figcaption>Displacement Shader -o 16 -a 16</figcaption>
 				  </td>
 				</tr>
 				<tr>
 					<td style="text-align: center; padding: 10px">
 					  <img src="imgs/part5_bump_level2.png" width="300px"/>
-					  <figcaption>Bump Shader -o 16 -a 16</figcaption>
+					  <figcaption>Bump Shader -o 128 -a 128</figcaption>
 					</td>
 					<td style="text-align: center; padding: 10px">
 					  <img src="imgs/part5_displacement_level2.png" width="300px"/>
-					  <figcaption>Displacement shade -o 16 -a 16</figcaption>
+					  <figcaption>Displacement Shader -o 128 -a 128</figcaption>
 					</td>
 				  </tr>
 			  </table>
 		</div>
 		<p>
-			Both forms of mappings create visual effect of depth in the surface's texture. The geometry in the case of bump mapping is unchanged. In displacement mapping, the positions of the are modified according to the texture height. This makes the renders more realistic, which can rougly be seen in the images below. Notice how when we decrease the vertex resolution to 16x16, the displacement mapping increases in smoothing due to there being fewer vertices to transform.
+			Both forms of mappings create a visual effect of depth in the surface's texture. The geometry in the case of bump mapping is unchanged. In displacement mapping, the positions of the vertices are modified according to the texture height. This makes the renders more realistic, which can rougly be seen in the images below. Notice how when we decrease the vertex resolution to 16x16, the displacement mapping becomes more smooth due to there being fewer vertices to transform.
 		</p>
 
 		<blockquote>
@@ -485,21 +486,16 @@
 				<tr>
 				  <td style="text-align: center; padding: 10px">
 					<img src="imgs/part5_mirror_sphere.png" width="300px"/>
-					<figcaption>Mirror shader: Sphere</figcaption>
+					<figcaption>Mirror Shader: Sphere</figcaption>
 				  </td>
 				  <td style="text-align: center; padding: 10px">
 					<img src="imgs/part5_mirror_cloth.png" width="300px"/>
-					<figcaption>Mirror shader: Cloth on Sphere</figcaption>
+					<figcaption>Mirror Shader: Cloth</figcaption>
 				  </td>
 				</tr>
-				<tr>
-					
-				</tr>
 			</table>
-			<td style="text-align: center; padding: 10px">
-			  <img src="imgs/part5_mirror_cloth_on_ball.png" width="300px"/>
-			  <figcaption>Mirror shader: Cloth on Sphere</figcaption>
-			</td>
+			<img src="imgs/part5_mirror_cloth_on_ball.png" width="300px"/>
+			<figcaption>Mirror Shader: Cloth on Sphere</figcaption>
 		</div>
 
 		<blockquote>
