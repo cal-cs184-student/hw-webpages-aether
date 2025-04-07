@@ -343,6 +343,35 @@
 			Vary the density as well as ks and describe with words and screenshots how they affect the behavior of the cloth as it falls on itself.
 		</blockquote>
 
+
+		<div style="display: flex; flex-direction: column; align-items: center;">
+			<table style="width: 100%; text-align: center; border-collapse: collapse;">
+			  <tr>
+				<td style="text-align: center; padding: 10px">
+				  <img src="imgs/part4-spring-constant-5,000.png" width="300px"/>
+				  <figcaption>Spring constant 50,000</figcaption>
+				</td>
+				<td style="text-align: center; padding: 10px">
+				  <img src="imgs/part4_density_15.png" width="300px"/>
+				  <figcaption>Density 15 </figcaption>
+				</td>
+			  </tr>
+			  <tr>
+				<td style="text-align: center; padding: 10px">
+				  <img src="imgs/part4-spring-constant-50,000.png" width="300px"/>
+				  <figcaption>Spring constant 50,000</figcaption>
+				</td>
+				<td style="text-align: center; padding: 10px">
+				  <img src="imgs/part4_density_150.png" width="300px"/>
+				  <figcaption>Density 150</figcaption>
+				</td>
+			  </tr>
+			</table>
+		</div>
+		<p>
+			As Higher densities lead the cloth to folding on itselft in a more randomized way due to the higher chance of it colliding on itself on smaller increments of folds when more dense. The cloth also has higher chances of being pulled apart when the spring constants is low.
+		</p>
+
 		<h2>Part 5: Shaders</h2>
 		
 		<blockquote>
@@ -418,9 +447,32 @@
 		<blockquote>
 			Show a screenshot of bump mapping on the cloth and on the sphere. Show a screenshot of displacement mapping on the sphere. Use the same texture for both renders. You can either provide your own texture or use one of the ones in the textures directory, BUT choose one that's not the default <code>texture_2.png</code>. Compare the two approaches and resulting renders in your own words. Compare how your the two shaders react to the sphere by changing the sphere mesh's coarseness by using <code>-o 16 -a 16</code> and then <code>-o 128 -a 128</code>.
 		</blockquote>
-
+		<div style="display: flex; flex-direction: column; align-items:center;">
+			<table style="width: 100%; text-align: center; border-collapse: collapse;">
+				<tr>
+				  <td style="text-align: center; padding: 10px">
+					<img src="imgs/part5_bump_level1.png" width="300px"/>
+					<figcaption>Bump Shader -o 16 -a 16</figcaption>
+				  </td>
+				  <td style="text-align: center; padding: 10px">
+					<img src="imgs/part5_displacement_level1.png" width="300px"/>
+					<figcaption>Displacement shader -o 16 -a 16</figcaption>
+				  </td>
+				</tr>
+				<tr>
+					<td style="text-align: center; padding: 10px">
+					  <img src="imgs/part5_bump_level2.png" width="300px"/>
+					  <figcaption>Bump Shader -o 16 -a 16</figcaption>
+					</td>
+					<td style="text-align: center; padding: 10px">
+					  <img src="imgs/part5_displacement_level2.png" width="300px"/>
+					  <figcaption>Displacement shade -o 16 -a 16</figcaption>
+					</td>
+				  </tr>
+			  </table>
+		</div>
 		<p>
-
+			Both forms of mappings create visual effect of depth in the surface's texture. The geometry in the case of bump mapping is unchanged. In displacement mapping, the positions of the are modified according to the texture height. This makes the renders more realistic, which can rougly be seen in the images below. Notice how when we decrease the vertex resolution to 16x16, the displacement mapping increases in smoothing due to there being fewer vertices to transform.
 		</p>
 
 		<blockquote>
@@ -437,10 +489,21 @@
 				  </td>
 				  <td style="text-align: center; padding: 10px">
 					<img src="imgs/part5_mirror_cloth.png" width="300px"/>
+<<<<<<< HEAD
 					<figcaption>Mirror shader: Cloth on Sphere</figcaption>
+=======
+					<figcaption>Mirror shader: Cloth</figcaption>
+>>>>>>> c6ca9906d9befda7a91f3c4e0bfea9c86990264b
 				  </td>
 				</tr>
-			  </table>
+				<tr>
+					
+				</tr>
+			</table>
+			<td style="text-align: center; padding: 10px">
+			  <img src="imgs/part5_mirror_cloth_on_ball.png" width="300px"/>
+			  <figcaption>Mirror shader: Cloth on Sphere</figcaption>
+			</td>
 		</div>
 
 		<blockquote>
@@ -449,7 +512,7 @@
 
 		
 		<p>
-
+			
 		</p>
 
 		<h2>(Optional) Part 6: Extra Credit - Additional cloth simulation features!</h2>
