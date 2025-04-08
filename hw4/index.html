@@ -402,7 +402,7 @@
 			
 			<ul>
 				<li>
-					Ambient light is similar to background lighting. It encomasses lighting bouncing around the entire scene and hitting the surface in question basically all directions. It has a glowing feel, in the sense that even parts not directly lit still get a piece of ambient ligth.
+					Ambient light is similar to background lighting. It encompasses lighting bouncing around the entire scene and hitting the surface in question basically all directions. It has a glowing feel, in the sense that even parts not directly lit still get a piece of ambient ligth.
 				</li>
 				<li>
 					Diffuse light is strictly light that hits the surface directly, which depends on the angle between light and the surface's normal. The bigger the cosine is between the normal and the direction of the directly hit light is, the brighter that spot is. Diffuse light can be seen when you shine a light at a sphere: the light on the sphere grows dimmer and dimmer from the apex of where the light is shining.
@@ -502,13 +502,28 @@
 			Explain what you did in your custom shader, if you made one.
 		</blockquote>
 
+		<div style="display: flex; flex-direction: column; align-items: center;">
+			<img src="imgs/part5_extra_credit.png" width="400px"/>
+		</div>
 		
 		<p>
-			
+			We made a custom shader that emulates glass and its transparency. We interpolate between reflected and refracted environment map colors based on viewing angle using Fresnel ratio/effect.
 		</p>
 
 		<h2>(Optional) Part 6: Extra Credit - Additional cloth simulation features!</h2>
-		
+
+		<p>
+			We simulated wind by adding extra forces on each point mass in our model depending on its position. The equation we used to add more forces is, where alpha is a regulizartion term we added to tune how much force we add:
+			
+			\[
+			 Wind Force(x,y,z) = (-2,0,-3) * \alpha * e^{-y(z-1)}
+			\]
+
+			Below is a video of our added wind factor:
+		</p>
+		<div style="display: flex; flex-direction: column; align-items: center;">
+			<img src="imgs/wind.gif" width="400px"/>
+		</div>
 		</div>
 	</body>
 </html>
